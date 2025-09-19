@@ -5,11 +5,11 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
-const EscolasPage = () => {
+const BairrosPage = () => {
   const columns = [
     {
       accessorKey: 'nome',
-      header: 'Nome da Escola',
+      header: 'Nome da Bairro',
       cell: ({ row }) => (
         <div className="font-medium">{row.getValue('nome')}</div>
       ),
@@ -20,63 +20,47 @@ const EscolasPage = () => {
       cell: ({ row }) => (
         <div className="font-mono text-sm">{row.getValue('cidade')}</div>
       ),
-    },
-    {
-      accessorKey: 'bairro',
-      header: 'Bairro',
-      cell: ({ row }) => (
-        <div className="text-center">{row.getValue('bairro')}</div>
-      ),
     }
   ];
 
   const formFields = [
     {
       name: 'nome',
-      label: 'Nome da Escola',
+      label: 'Nome da Bairro',
       type: 'text',
       required: true,
-      placeholder: 'Digite o nome da escola'
+      placeholder: 'Digite o nome da bairro'
     },
     {
       name: 'cidade',
-      label: 'Cidade da Escola',
+      label: 'Cidade da Bairro',
       type: 'text',
       required: true,
-      placeholder: 'Digite a cidade da escola'
-    },
-    {
-      name: 'bairro',
-      label: 'Bairro',
-      type: 'text',
-      required: true,
-      placeholder: 'Digite o bairro da escola'
+      placeholder: 'Digite a cidade da bairro'
     }
   ];
 
   const handleExportExcel = (data) => {
     const worksheet = XLSX.utils.json_to_sheet(data.map(item => ({
-      'Nome da Escola': item.nome,
-      'Cidade': item.cidade,
-      'Bairro': item.bairro
+      'Nome da Bairro': item.nome,
+      'Cidade': item.cidade
     })));
     
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Escolas');
-    XLSX.writeFile(workbook, 'escolas.xlsx');
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Bairros');
+    XLSX.writeFile(workbook, 'bairros.xlsx');
   };
 
   const handleExportPDF = (data) => {
     const doc = new jsPDF();
     
     doc.setFontSize(18);
-    doc.text('Lista de Escolas', 14, 22);
+    doc.text('Lista de Bairros', 14, 22);
     
-    const tableColumn = ['Nome', 'Cidade', 'Bairro'];
+    const tableColumn = ['Nome', 'Cidade'];
     const tableRows = data.map(item => [
       item.nome,
-      item.cidade,
-      item.bairro
+      item.cidade
     ]);
 
     doc.autoTable({
@@ -85,22 +69,22 @@ const EscolasPage = () => {
       startY: 30,
     });
 
-    doc.save('escolas.pdf');
+    doc.save('bairros.pdf');
   };
 
   return (
     <CRUDPage
-      title="Escolas"
-      entityType="escolas"
+      title="Bairros"
+      entityType="bairros"
       columns={columns}
       formFields={formFields}
-      newButtonLabel="Nova Escola"
-      searchPlaceholder="Buscar escolas..."
+      newButtonLabel="Novo Bairro"
+      searchPlaceholder="Buscar bairros..."
       onExportExcel={handleExportExcel}
       onExportPDF={handleExportPDF}
     />
   );
 };
 
-export default EscolasPage;
+export default BairrosPage;
 

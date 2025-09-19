@@ -6,8 +6,10 @@ import {
   ChevronUp,
   Users,
   School, 
+  PlusCircle,
   GraduationCap, 
   BookOpen, 
+  Building,
   Building2,
   Home,
   LogOut,
@@ -31,35 +33,28 @@ const menuItems = [
   {
     id: 'cadastro',
     label: 'Cadastro',
-    icon: GraduationCap,
+    icon: PlusCircle,
     children: [
+      {
+        id: 'cidades',
+        label: 'Cidades',
+        icon: Building2,
+        component: 'Cidades'
+      },
+      {
+        id: 'bairros',
+        label: 'Bairros',
+        icon: Building,
+        component: 'Bairros'
+      },
       {
         id: 'escolas',
         label: 'Escolas',
         icon: School,
         component: 'Escolas'
       },
-      {
-        id: 'teachers',
-        label: 'Professores',
-        icon: User,
-        component: 'Teachers'
-      }
     ]
-  },
-  // {
-  //   id: 'administration',
-  //   label: 'Administração',
-  //   icon: Building2,
-  //   children: [
-  //     {
-  //       id: 'departments',
-  //       label: 'Departamentos',
-  //       icon: Building2,
-  //       component: 'Departments'
-  //     }
-  //   ]
-  // }
+  }
 ];
 
 const Sidebar = () => {
@@ -141,10 +136,22 @@ const Sidebar = () => {
     <div className={`glass-effect border-r border-border transition-all duration-300 ${
       isCollapsed ? 'w-24' : 'w-64'
     } flex flex-col h-screen animate-fade-in`}>
-      <div className="p-4 border-b border-border">
+      <div className="p-4 border-b border-border">{isCollapsed && (
+          <div className="flex justify-center mt-2">
+            <img src="/loguinho.png" alt="Logo GEMA" className="h-8 w-auto" />
+          </div>
+        )}
         <div className="flex items-center justify-between">
+          {isCollapsed && (
+          <div className="flex justify-center mt-2 mb-4">
+            <img src="/loguinho.png" alt="Logo GEMA" className="h-8 w-auto" />
+          </div>
+        )}
           {!isCollapsed && (
-            <h2 className="text-lg font-semibold text-foreground">CRUD System</h2>
+            <div className="flex items-center space-x-2">
+              <img src="/logo_gema.png" alt="Logo GEMA" className="h-8 w-auto" />
+              <h2 className="text-lg font-semibold text-foreground"></h2>
+            </div>
           )}
           <div className="flex items-center space-x-1">
             <ThemeToggle />
@@ -162,6 +169,7 @@ const Sidebar = () => {
             </Button>
           </div>
         </div>
+        
       </div>
 
       <div className="flex-1 overflow-y-auto p-2">
