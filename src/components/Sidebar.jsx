@@ -13,7 +13,8 @@ import {
   Building2,
   Home,
   LogOut,
-  User
+  User,
+  Utensils 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -35,6 +36,12 @@ const menuItems = [
     label: 'Cadastro',
     icon: PlusCircle,
     children: [
+       {
+        id: 'usuarios',
+        label: 'Usuários',
+        icon: User,
+        component: 'Usuarios'
+      },
       {
         id: 'cidades',
         label: 'Cidades',
@@ -52,6 +59,12 @@ const menuItems = [
         label: 'Escolas',
         icon: School,
         component: 'Escolas'
+      },
+      {
+        id: 'cardapio',
+        label: 'Cardápio',
+        icon: Utensils,
+        component: 'Cardapio'
       },
     ]
   }
