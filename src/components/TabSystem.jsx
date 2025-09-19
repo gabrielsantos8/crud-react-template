@@ -9,6 +9,8 @@ import StudentsPage from '@/pages/StudentsPage';
 import TeachersPage from '@/pages/TeachersPage';
 import CoursesPage from '@/pages/CoursesPage';
 import EscolasPage from '@/pages/EscolasPage';
+import CidadesPage from '@/pages/CidadesPage';
+import BairrosPage from '@/pages/BairrosPage';
 import DepartmentsPage from '@/pages/DepartmentsPage';
 
 const Dashboard = () => (
@@ -42,7 +44,9 @@ const Dashboard = () => (
 const componentMap = {
   Dashboard,
   Teachers: TeachersPage,
-  Escolas: EscolasPage
+  Cidades: CidadesPage,
+  Escolas: EscolasPage,
+  Bairros: BairrosPage
 };
 
 const TabSystem = () => {

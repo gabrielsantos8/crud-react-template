@@ -1,4 +1,4 @@
-# CRUD System - Modern Data Management
+# GEMA - Gestão Escolar de Merenda e Alimentos 
 
 Um sistema CRUD moderno e elegante construído com React, featuring design liquid glass, sistema de abas e funcionalidades completas de gerenciamento de dados.
 
