@@ -8,6 +8,13 @@ import 'jspdf-autotable';
 const CidadesPage = () => {
   const columns = [
     {
+      accessorKey: 'codIbge',
+      header: 'Cód. IBGE',
+      cell: ({ row }) => (
+        <div className="font-medium">{row.getValue('codIbge')}</div>
+      ),
+    },
+    {
       accessorKey: 'nome',
       header: 'Nome da Cidade',
       cell: ({ row }) => (
@@ -24,6 +31,13 @@ const CidadesPage = () => {
   ];
 
   const formFields = [
+    {
+      name: 'codIbge',
+      label: 'Cód. IBGE',
+      type: 'number',
+      required: true,
+      placeholder: 'Digite o IBGE da cidade'
+    },
     {
       name: 'nome',
       label: 'Nome da Cidade',
@@ -42,6 +56,7 @@ const CidadesPage = () => {
 
   const handleExportExcel = (data) => {
     const worksheet = XLSX.utils.json_to_sheet(data.map(item => ({
+      'IBGE': item.codIbge,
       'Nome da Cidade': item.nome,
       'UF': item.uf
     })));
@@ -57,8 +72,9 @@ const CidadesPage = () => {
     doc.setFontSize(18);
     doc.text('Lista de Cidades', 14, 22);
     
-    const tableColumn = ['Nome', 'UF'];
+    const tableColumn = ['IBGE', 'Nome', 'UF'];
     const tableRows = data.map(item => [
+      item.codIbge,
       item.nome,
       item.uf
     ]);

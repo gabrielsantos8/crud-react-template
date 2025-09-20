@@ -17,35 +17,15 @@ import DepartmentsPage from '@/pages/DepartmentsPage';
 
 const Dashboard = () => (
   <div className="p-6 animate-fade-in">
-    <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div className="glass-card p-6 rounded-lg border animate-slide-up">
-        <h3 className="text-lg font-semibold mb-2">Estudantes</h3>
-        <p className="text-3xl font-bold text-primary">1,234</p>
-        <p className="text-sm text-muted-foreground">Total de estudantes</p>
-      </div>
-      <div className="glass-card p-6 rounded-lg border animate-slide-up" style={{ animationDelay: '0.1s' }}>
-        <h3 className="text-lg font-semibold mb-2">Professores</h3>
-        <p className="text-3xl font-bold text-primary">89</p>
-        <p className="text-sm text-muted-foreground">Total de professores</p>
-      </div>
-      <div className="glass-card p-6 rounded-lg border animate-slide-up" style={{ animationDelay: '0.2s' }}>
-        <h3 className="text-lg font-semibold mb-2">Cursos</h3>
-        <p className="text-3xl font-bold text-primary">25</p>
-        <p className="text-sm text-muted-foreground">Total de cursos</p>
-      </div>
-      <div className="glass-card p-6 rounded-lg border animate-slide-up" style={{ animationDelay: '0.3s' }}>
-        <h3 className="text-lg font-semibold mb-2">Departamentos</h3>
-        <p className="text-3xl font-bold text-primary">8</p>
-        <p className="text-sm text-muted-foreground">Total de departamentos</p>
-      </div>
-    </div>
+    <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+    <p className="text-muted-foreground">Bem-vindo ao painel de controle!</p>
+    <p className="text-muted-foreground">Em breve mais informações.</p>
+
   </div>
 );
 
 const componentMap = {
   Dashboard,
-  Teachers: TeachersPage,
   Cidades: CidadesPage,
   Escolas: EscolasPage,
   Bairros: BairrosPage,
@@ -59,14 +39,20 @@ const TabSystem = () => {
   if (tabs.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center bg-background">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-muted-foreground mb-2">
-            Nenhuma aba aberta
-          </h2>
-          <p className="text-muted-foreground">
-            Selecione um item do menu para começar
-          </p>
-        </div>
+      <div className="text-center">
+        <img
+        src="/logo_gema_completo.png"
+        alt="Logo GEMA"
+        className="mx-auto mb-4 w-48 max-w-full"
+        draggable={false}
+        />
+        <h2 className="text-xl font-semibold text-muted-foreground mb-2">
+        Nenhuma aba aberta
+        </h2>
+        <p className="text-muted-foreground">
+        Selecione um item do menu para começar
+        </p>
+      </div>
       </div>
     );
   }
