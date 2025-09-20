@@ -45,6 +45,10 @@ const FormModal = ({
   }, [open, fields, initialData]);
 
   const handleInputChange = (name, value) => {
+      // if (typeof fields.find(f => f.name === name)?.callback === 'function') {
+      //   fields.find(f => f.name === name)?.callback(value);
+      // }
+    
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -95,6 +99,14 @@ const FormModal = ({
       className: errors[field.name] ? 'border-destructive' : ''
     };
 
+    var nOptions = field.options || [];
+    if (field.valueField && field.labelField && Array.isArray(field.options)) {
+      nOptions = field.options.map(opt => ({
+        value: opt[field.valueField],
+        label: opt[field.labelField]
+      }));
+    }
+
     switch (field.type) {
       case 'textarea':
         return (
@@ -109,13 +121,13 @@ const FormModal = ({
         return (
           <Select
             value={formData[field.name] || ''}
-            onValueChange={(value) => handleInputChange(field.name, value)}
+            onValueChange={(value) => handleInputChange(field.name, parseInt(value))}
           >
             <SelectTrigger className={errors[field.name] ? 'border-destructive' : ''}>
               <SelectValue placeholder={field.placeholder} />
             </SelectTrigger>
             <SelectContent>
-              {field.options?.map((option) => (
+              {nOptions?.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>

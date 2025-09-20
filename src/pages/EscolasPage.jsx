@@ -1,11 +1,46 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import CRUDPage from '@/components/CRUDPage';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import {getData} from '@/api';
 
 const EscolasPage = () => {
+  const didRun = useRef(false);
+
+  const [cidades, setCidades] = useState([]);
+  const [bairros, setBairros] = useState([]);
+
+  useEffect(() => {
+    getCidades();
+  }, []);
+
+  const getCidades = async () => {
+    if (didRun.current) return;
+    didRun.current = true;
+    try {
+      var dados = await getData('cidades');
+      setCidades(dados.data || []);
+      return dados;
+    } catch (err) {
+      setError(err.message);
+      toast.error('Erro ao carregar cidades!');
+      throw err;
+    }
+  };
+
+  const getBairros = async (id_cidade) => {
+    try {
+      var dados = await getData('bairros');
+      setBairros(dados.data || []);
+    } catch (err) {
+      setError(err.message);
+      toast.error('Erro ao carregar bairros!');
+      throw err;
+    }
+  };
+
   const columns = [
     {
       accessorKey: 'nome',
@@ -39,18 +74,25 @@ const EscolasPage = () => {
       placeholder: 'Digite o nome da escola'
     },
     {
-      name: 'cidade',
-      label: 'Cidade da Escola',
-      type: 'text',
+      name: 'id_cidade',
+      label: 'Cidade',
+      type: 'select',
       required: true,
-      placeholder: 'Digite a cidade da escola'
+      placeholder: 'Selecione a cidade da escola',
+      options: cidades,
+      labelField: 'nome',
+      valueField: 'id',
+      callback: (value) => getBairros(value)
     },
     {
-      name: 'bairro',
+      name: 'id_bairro',
       label: 'Bairro',
-      type: 'text',
+      type: 'select',
       required: true,
-      placeholder: 'Digite o bairro da escola'
+      placeholder: 'Selecione o bairro da escola',
+      options: bairros,
+      labelField: 'nome',
+      valueField: 'id'
     }
   ];
 
