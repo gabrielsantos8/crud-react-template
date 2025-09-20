@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { getCidades } from '@/api';
 import { Badge } from '@/components/ui/badge';
 import CRUDPage from '@/components/CRUDPage';
 import * as XLSX from 'xlsx';
@@ -6,26 +7,47 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 const CardapioPage = () => {
+
+  const [cidadeOptions, setCidadeOptions] = useState([]);
+    const didRun = useRef(false);
+    useEffect(() => {
+      if (didRun.current) return;
+      didRun.current = true;
+      const fetchCidades = async () => {
+        const cidades = await getCidades();
+        console.log(cidades);
+        const cidadesArray = Array.isArray(cidades.data) ? cidades.data : [];
+        setCidadeOptions(
+          cidadesArray.map(cidade => ({
+            label: cidade.nome,
+            value: String(cidade.id) 
+          }))
+        );
+      };
+      console.log(cidadeOptions);
+      fetchCidades();
+    }, []);
+
   const columns = [
     {
       accessorKey: 'nome',
-      header: 'Nome do Usuario',
+      header: 'Nome',
       cell: ({ row }) => (
         <div className="font-medium">{row.getValue('nome')}</div>
       ),
     },
     {
-      accessorKey: 'receita',
-      header: 'Receita',
+      accessorKey: 'item',
+      header: 'Itens',
       cell: ({ row }) => (
-        <div className="font-mono text-sm">{row.getValue('receita')}</div>
+        <div className="font-mono text-sm">{row.getValue('item')}</div>
       ),
     },
     {
-      accessorKey: 'periodo',
-      header: 'Periodo',
+      accessorKey: 'data',
+      header: 'Data',
       cell: ({ row }) => (
-        <div className="font-mono text-sm">{row.getValue('periodo')}</div>
+        <div className="font-mono text-sm">{row.getValue('data')}</div>
       ),
     },
     {
@@ -46,26 +68,27 @@ const CardapioPage = () => {
       placeholder: 'Digite o nome...'
     },
     {
-      name: 'receita',
-      label: 'Receita',
+      name: 'item',
+      label: 'Items',
       type: 'text',
       required: true,
-      placeholder: 'Digite a Receita...'
+      placeholder: 'Digite os Itens...'
     },
     {
-      name: 'periodo',
-      label: 'Periodo',
-      type: 'text',
+      name: 'data',
+      label: 'Data',
+      type: 'date',
       required: true,
-      placeholder: 'Digite o Periodo'
+      placeholder: 'Selecione a Data'
     },
     {
-      name: 'cidade',
+      name: 'id_cidade',
       label: 'Cidade',
-      type: 'text',
+      type: 'select',
       required: true,
-      placeholder: 'Digite a Cidade'
-    },
+      placeholder: 'Selecione a cidade',
+      options: cidadeOptions,
+    }
   ];
 
   const handleExportExcel = (data) => {
@@ -90,8 +113,8 @@ const CardapioPage = () => {
     const tableColumn = ['Nome', 'receitas', 'periodo', 'cidade'];
     const tableRows = data.map(item => [
       item.nome,
-      item.receitas,
-      item.periodo,
+      item.items,
+      item.data,
       item.cidade,
     ]);
 
@@ -107,7 +130,7 @@ const CardapioPage = () => {
   return (
     <CRUDPage
       title="Cardapio"
-      entityType="cardapio"
+      entityType="cardapios"
       columns={columns}
       formFields={formFields}
       newButtonLabel="Novo Cardapio"

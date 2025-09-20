@@ -41,9 +41,15 @@ export const deleteData = async (endpoint, id) => {
     return response.json();
 };
 
+export const getCidades = async () => {
+    return await getData('cidades');
+};
+
+
 export default {
     getData,
     postData,
     updateData,
     deleteData,
+    getCidades
 };

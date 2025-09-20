@@ -1,11 +1,32 @@
-import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import CRUDPage from '@/components/CRUDPage';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import React, { useEffect, useRef, useState } from 'react';
+import { getCidades } from '@/api';
 
 const BairrosPage = () => {
+  const [cidadeOptions, setCidadeOptions] = useState([]);
+  const didRun = useRef(false);
+  useEffect(() => {
+    if (didRun.current) return;
+    didRun.current = true;
+    const fetchCidades = async () => {
+      const cidades = await getCidades();
+      console.log(cidades);
+      const cidadesArray = Array.isArray(cidades.data) ? cidades.data : [];
+      setCidadeOptions(
+        cidadesArray.map(cidade => ({
+          label: cidade.nome,
+          value: String(cidade.id) 
+        }))
+      );
+    };
+    console.log(cidadeOptions);
+    fetchCidades();
+  }, []);
+
   const columns = [
     {
       accessorKey: 'nome',
@@ -29,14 +50,15 @@ const BairrosPage = () => {
       label: 'Nome da Bairro',
       type: 'text',
       required: true,
-      placeholder: 'Digite o nome da bairro'
+      placeholder: 'Digite o nome da bairro',
     },
     {
-      name: 'cidade',
+      name: 'id_cidade',
       label: 'Cidade da Bairro',
-      type: 'text',
+      type: 'select',
       required: true,
-      placeholder: 'Digite a cidade da bairro'
+      placeholder: 'Selecione a cidade',
+      options: cidadeOptions,
     }
   ];
 
