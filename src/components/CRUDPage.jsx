@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
-import { Plus, Download, FileSpreadsheet, FileText } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import DataTable from './DataTable';
 import FormModal from './FormModal';
 import ConfirmDialog from './ConfirmDialog';
@@ -71,18 +65,6 @@ const CRUDPage = ({
     }
   };
 
-  const handleExportExcel = () => {
-    if (onExportExcel) {
-      onExportExcel(data);
-    }
-  };
-
-  const handleExportPDF = () => {
-    if (onExportPDF) {
-      onExportPDF(data);
-    }
-  };
-
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -95,32 +77,6 @@ const CRUDPage = ({
         </div>
         
         <div className="flex items-center space-x-2">
-          {/* Export Dropdown */}
-          {(onExportExcel || onExportPDF) && (
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Button variant="outline" size="sm">
-                  <Download className="h-4 w-4 mr-2" />
-                  Exportar
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {onExportExcel && (
-                  <DropdownMenuItem onClick={handleExportExcel}>
-                    <FileSpreadsheet className="h-4 w-4 mr-2" />
-                    Excel
-                  </DropdownMenuItem>
-                )}
-                {onExportPDF && (
-                  <DropdownMenuItem onClick={handleExportPDF}>
-                    <FileText className="h-4 w-4 mr-2" />
-                    PDF
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-          
           {/* New Item Button */}
           <Button onClick={handleCreate}>
             <Plus className="h-4 w-4 mr-2" />
@@ -156,7 +112,7 @@ const CRUDPage = ({
         onOpenChange={setShowConfirmDialog}
         onConfirm={handleConfirmDelete}
         title="Confirmar exclusão"
-        description={`Tem certeza que deseja excluir "${selectedItem?.name || 'este item'}"? Esta ação não pode ser desfeita.`}
+        description={`Tem certeza que deseja excluir "${selectedItem?.nome || 'este item'}"? Esta ação não pode ser desfeita.`}
         confirmText="Excluir"
         cancelText="Cancelar"
         variant="destructive"

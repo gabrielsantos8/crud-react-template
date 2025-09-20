@@ -1,60 +1,47 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
+import {getData, postData, updateData, deleteData} from '../api';
 
-// Mock data para demonstração
-const mockData = {
-  students: [
-    { id: 1, name: 'Ana Silva', email: 'ana@email.com', course: 'Engenharia', status: 'Ativo', createdAt: '2024-01-15' },
-    { id: 2, name: 'Carlos Santos', email: 'carlos@email.com', course: 'Medicina', status: 'Ativo', createdAt: '2024-01-20' },
-    { id: 3, name: 'Maria Oliveira', email: 'maria@email.com', course: 'Direito', status: 'Inativo', createdAt: '2024-02-01' },
-    { id: 4, name: 'João Costa', email: 'joao@email.com', course: 'Psicologia', status: 'Ativo', createdAt: '2024-02-10' },
-    { id: 5, name: 'Lucia Ferreira', email: 'lucia@email.com', course: 'Arquitetura', status: 'Ativo', createdAt: '2024-02-15' }
-  ],
-  teachers: [
-    { id: 1, name: 'Dr. Roberto Lima', email: 'roberto@email.com', department: 'Engenharia', specialization: 'Estruturas', status: 'Ativo', createdAt: '2023-08-15' },
-    { id: 2, name: 'Dra. Patricia Rocha', email: 'patricia@email.com', department: 'Medicina', specialization: 'Cardiologia', status: 'Ativo', createdAt: '2023-09-01' },
-    { id: 3, name: 'Prof. Marcos Alves', email: 'marcos@email.com', department: 'Direito', specialization: 'Civil', status: 'Ativo', createdAt: '2023-10-12' }
-  ],
-  courses: [
-    { id: 1, name: 'Engenharia Civil', code: 'ENG001', duration: '5 anos', credits: 240, status: 'Ativo', createdAt: '2023-01-10' },
-    { id: 2, name: 'Medicina', code: 'MED001', duration: '6 anos', credits: 360, status: 'Ativo', createdAt: '2023-01-15' },
-    { id: 3, name: 'Direito', code: 'DIR001', duration: '5 anos', credits: 200, status: 'Ativo', createdAt: '2023-01-20' }
-  ],
-  departments: [
-    { id: 1, name: 'Departamento de Engenharia', code: 'DEPT-ENG', head: 'Dr. Roberto Lima', budget: 'R$ 500.000', status: 'Ativo', createdAt: '2023-01-01' },
-    { id: 2, name: 'Departamento de Medicina', code: 'DEPT-MED', head: 'Dra. Patricia Rocha', budget: 'R$ 800.000', status: 'Ativo', createdAt: '2023-01-01' },
-    { id: 3, name: 'Departamento de Direito', code: 'DEPT-DIR', head: 'Prof. Marcos Alves', budget: 'R$ 300.000', status: 'Ativo', createdAt: '2023-01-01' }
-  ]
-};
 
 const useCRUD = (entityType) => {
+  const didRun = useRef(false);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  // Simular carregamento inicial dos dados
+  
   useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setData(mockData[entityType] || []);
-      setLoading(false);
-    }, 500);
+    if (didRun.current) return;
+    didRun.current = true;
+    getAll(entityType)
+    console.log('Carregando dados para', entityType);
   }, [entityType]);
+
+  const getAll = async (entityType) => {
+    setLoading(true);
+    try {
+      var dados = await getData(entityType);
+      setData(dados.data || []);
+      dados.data.length <= 0 && toast.success('Nenhum dado encontrado!');
+      return dados;
+    } catch (err) {
+      setError(err.message);
+      toast.error('Erro ao carregar dados!');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Criar novo item
   const create = async (newItem) => {
     setLoading(true);
     try {
-      // Simular API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
       const item = {
         ...newItem,
-        id: Date.now(),
         createdAt: new Date().toISOString().split('T')[0]
       };
-      
-      setData(prev => [...prev, item]);
+      await postData(entityType, item);
+      await getAll(entityType);
       toast.success('Item criado com sucesso!');
       return item;
     } catch (err) {
@@ -70,12 +57,9 @@ const useCRUD = (entityType) => {
   const update = async (id, updatedItem) => {
     setLoading(true);
     try {
-      // Simular API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setData(prev => prev.map(item => 
-        item.id === id ? { ...item, ...updatedItem } : item
-      ));
+      console.log("ID no useCRUD:", id);
+      await updateData(entityType, id, updatedItem);
+      await getAll(entityType);
       toast.success('Item atualizado com sucesso!');
     } catch (err) {
       setError(err.message);
@@ -86,14 +70,11 @@ const useCRUD = (entityType) => {
     }
   };
 
-  // Deletar item
   const remove = async (id) => {
     setLoading(true);
     try {
-      // Simular API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setData(prev => prev.filter(item => item.id !== id));
+      await deleteData(entityType, id);
+      await getAll(entityType);
       toast.success('Item removido com sucesso!');
     } catch (err) {
       setError(err.message);
